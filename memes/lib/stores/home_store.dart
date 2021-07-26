@@ -1,4 +1,5 @@
 import 'package:memes/models/memes.dart';
+import 'package:memes/repositories/memes_repository.dart';
 import 'package:mobx/mobx.dart';
 
 part 'home_store.g.dart';
@@ -16,7 +17,7 @@ abstract class _HomeStore with Store {
   void setSearch(String value) => search = value;
 
   @observable
-  late String error;
+  late String error = '';
 
   @action
   void setError(String value) => error = value;
@@ -35,6 +36,22 @@ abstract class _HomeStore with Store {
 
   @action
   void loadNextPage() => page++;
+
+  @computed
+  bool get showProgress => loading && memesList.isEmpty;
+
+  @computed
+  int get itemCount => lastPage ? memesList.length : memesList.length +1;
+
+  void incrementViews(Memes memes){
+    try{
+      MemesRepository().incrementViews(memes);
+    }catch(e){
+      print(e);
+    }
+
+  }
+
 
 }
 

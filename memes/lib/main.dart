@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:memes/screens/base/base_screen.dart';
+import 'package:memes/stores/home_store.dart';
 import 'package:memes/stores/page_store.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 
@@ -19,6 +20,7 @@ void main() async {
 
 void setupLocators(){
   GetIt.I.registerSingleton(PageStore());
+  GetIt.I.registerSingleton(HomeStore());
 }
 
 class MyApp extends StatelessWidget {

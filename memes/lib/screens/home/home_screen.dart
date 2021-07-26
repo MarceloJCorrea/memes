@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:memes/components/custom_drawer/custom_drawer.dart';
+import 'package:memes/components/empty_card.dart';
+import 'package:memes/screens/home/components/memes_tile.dart';
 import 'package:memes/stores/home_store.dart';
 
 class HomeScreen extends StatelessWidget {
 
   final HomeStore homeStore = GetIt.I<HomeStore>();
+
+  final ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +50,30 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                    );
-                  return Container();
+                  if (homeStore.showProgress)
+                    return Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(Colors.white),
+                      ),
+                    );
+                  if(homeStore.memesList.isEmpty)
+                    return EmptyCard('Nenhum meme encontrado');
+                  return ListView.builder(
+                    controller: scrollController,
+                      itemCount: homeStore.itemCount,
+                      itemBuilder: (_, index){
+                        if(index < homeStore.memesList.length)
+                          return MemesTile(homeStore.memesList[index]);
+
+                        homeStore.loadNextPage();
+                        return Container(
+                          height: 10,
+                          child: LinearProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation(Colors.purple),
+                          ),
+                        );
+                      },
+                  );
                 },)
             ],)
             )
